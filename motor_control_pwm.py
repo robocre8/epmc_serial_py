@@ -8,7 +8,7 @@ motorControl = EPMC('/dev/ttyUSB0')
 for i in range(6):
   time.sleep(1.0)
   print(f'configuring controller: {i} sec')
-motorControl.sendTargetVel(0.0, 0.0)
+motorControl.sendPwm(0.0, 0.0)
 print('configuration complete')
 
 motorControl.setCmdTimeout(3000)
@@ -20,18 +20,18 @@ angPosB=0.0
 angVelA=0.0
 angVelB=0.0
 
-lowTargetVel = -8.00 # in rad/sec
-highTargetVel = 8.00 # in rad/sec
+lowPwm = -100 # in rad/sec
+highPwm = 100 # in rad/sec
 
 prevTime = None
-sampleTime = 10.0
+sampleTime = 0.02
 
 ctrlPrevTime = None
 ctrlSampleTime = 5.0
 sendHigh = True
 
 
-motorControl.sendTargetVel(lowTargetVel, lowTargetVel) # targetA, targetB
+motorControl.sendPwm(lowPwm, lowPwm) # targetA, targetB
 sendHigh = True
 
 prevTime = time.time()
@@ -39,10 +39,10 @@ ctrlPrevTime = time.time()
 while True:
   if time.time() - ctrlPrevTime > ctrlSampleTime:
     if sendHigh:
-      motorControl.sendTargetVel(highTargetVel, highTargetVel) # targetA, targetB
+      motorControl.sendPwm(highPwm, highPwm) # targetA, targetB
       sendHigh = False
     else:
-      motorControl.sendTargetVel(lowTargetVel, lowTargetVel) # targetA, targetB
+      motorControl.sendPwm(lowPwm, lowPwm) # targetA, targetB
       sendHigh = True
     
     ctrlPrevTime = time.time()
@@ -61,3 +61,4 @@ while True:
     
     prevTime = time.time()
   time.sleep(0.01)
+
