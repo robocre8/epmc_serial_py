@@ -52,6 +52,14 @@ class EPMC:
     isSuccess = self.send("/pwm", pwmValA, pwmValB) # sends  pwmValA, pwmValB
     return isSuccess
   
+  def setCmdTimeout(self, timeout_ms=0):
+    isSuccess = self.send("/timeout", timeout_ms) # set command timeout in ms
+    return isSuccess
+  
+  def getCmdTimeout(self):
+    timeout_ms = self.get("/timeout") # get command timeout in ms
+    return timeout_ms
+  
   def getMotorsVel(self):
     angVelA, angVelB = self.get("/vel")
     return angVelA, angVelB

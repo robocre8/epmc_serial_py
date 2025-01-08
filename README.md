@@ -57,6 +57,12 @@ A simple way to get started is simply to try out and follow the example code
 - send PWM command
   > .sendPwm(motorA_PWM, motorB_PWM)
 
+- set motor command timeout
+  > .setCmdTimeout(timeout_ms)
+
+- get motor command timeout
+  > .getCmdTimeout() # returns motor command timeout in ms
+
 - read motors angular position
   > .getMotorsPos() # returns angPosA, angPosB
 
