@@ -105,14 +105,14 @@ class EPMC:
     def write_data1(self, cmd, pos, val):
         payload = struct.pack('<Bf', pos, val)
         self.send_packet_with_payload(cmd, payload)
-        success, val = self.read_packet1()
-        return success, val
+        success, val_arr = self.read_packet1()
+        return success, val_arr[0]
 
     def read_data1(self, cmd, pos):
         payload = struct.pack('<Bf', pos, 0.0)  # big-endian
         self.send_packet_with_payload(cmd, payload)
-        success, val = self.read_packet1()
-        return success, val
+        success, val_arr = self.read_packet1()
+        return success, val_arr[0]
     
     def write_data2(self, cmd, a, b):
         payload = struct.pack('<ff', a,b) 
@@ -120,8 +120,8 @@ class EPMC:
 
     def read_data2(self, cmd):
         self.send_packet_without_payload(cmd)
-        success, val = self.read_packet2()
-        return success, val
+        success, val_arr = self.read_packet2()
+        return success, val_arr
 
     def write_data4(self, cmd, a, b, c, d):
         payload = struct.pack('<ffff', a,b,c,d) 
@@ -129,8 +129,8 @@ class EPMC:
 
     def read_data4(self, cmd):
         self.send_packet_without_payload(cmd)
-        success, val = self.read_packet4()
-        return success, val
+        success, val_arr = self.read_packet4()
+        return success, val_arr
         
     #---------------------------------------------------------------------
 
@@ -154,41 +154,34 @@ class EPMC:
     
     def setCmdTimeout(self, timeout):
         success, res = self.write_data1(SET_CMD_TIMEOUT, 100, timeout)
-        if success:
-            return success, int(res[0])
-        else:
-            return success, 0
+        return success
         
     def getCmdTimeout(self):
         success, res = self.read_data1(GET_CMD_TIMEOUT, 100)
         if success:
-            return success, int(res[0])
+            return success, int(res)
         else:
             return success, 0
     
     def setPidMode(self, motor_no, mode):
         success, res = self.write_data1(SET_PID_MODE, motor_no, mode)
-        if success:
-            return success, int(res[0])
-        else:
-            return success, 0
+        return success
     
     def getPidMode(self, motor_no):
-        success, res = self.read_data1(GET_CMD_TIMEOUT, motor_no)
+        success, mode = self.read_data1(GET_CMD_TIMEOUT, motor_no)
         if success:
-            return success, int(res[0])
+            return success, int(mode)
         else:
             return success, 0
     
     def clearDataBuffer(self):
         success, res = self.write_data1(CLEAR_DATA_BUFFER, 100, 0.0)
-        if success:
-            return success, int(res[0])
-        else:
-            return success, 0
+        return success
     
     #---------------------------------------------------------------------
 
     def readMotorData(self):
         success, vel_arr = self.read_data4(READ_MOTOR_DATA)
         return success, vel_arr
+    
+    #---------------------------------------------------------------------
