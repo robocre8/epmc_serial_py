@@ -43,6 +43,7 @@ A simple way to get started is simply to try out and follow the example code
 
 - connect to smc_driver shield module
   > EPMC("port_name or port_path")
+  > .clearDataBuffer()
 
 - send target angular velocity command
   > .writeSpeed(motor0_TargetVel, motor1_TargetVel)
