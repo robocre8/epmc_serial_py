@@ -1,9 +1,9 @@
 import serial
 import struct
 
-class EPMCSerialError(Exception):
-        """Custom exception for for EPMC Comm failure"""
-        pass
+# class EPMCSerialError(Exception):
+#         """Custom exception for for EPMC Comm failure"""
+#         pass
 
 
 # Serial Protocol Command IDs -------------
@@ -32,12 +32,13 @@ class EPMC:
         self.ser = serial.Serial(port, baud, timeout=timeOut)
     
     #------------------------------------------------------------------------
-    def send_packet_without_payload(self, cmd):
+    def send_packet_without_payload(self, cmd, length=0):
         length = 0
         packet = bytearray([START_BYTE, cmd, length])
         checksum = sum(packet) & 0xFF
         packet.append(checksum)
         self.ser.write(packet)
+        self.ser.flush()
 
     def send_packet_with_payload(self, cmd, payload_bytes):
         length = len(payload_bytes)
@@ -45,6 +46,7 @@ class EPMC:
         checksum = sum(packet) & 0xFF
         packet.append(checksum)
         self.ser.write(packet)
+        self.ser.flush()
 
     def read_packet1(self):
         """
@@ -53,8 +55,9 @@ class EPMC:
         """
         payload = self.ser.read(4)
         if len(payload) != 4:
-            print("[EPMC SERIAL ERROR]: Timeout while reading 1 values")
-            raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 1 value")
+            return 0.0
+            # print("[EPMC SERIAL ERROR]: Timeout while reading 1 values")
+            # raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 1 value")
 
         # Unpack 4 bytes as little-endian float
         (val,) = struct.unpack('<f', payload)
@@ -67,8 +70,9 @@ class EPMC:
         """
         payload = self.ser.read(8)
         if len(payload) != 8:
-            print("[EPMC SERIAL ERROR]: Timeout while reading 2 values")
-            raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 2 values")
+            return 0.0, 0.0
+            # print("[EPMC SERIAL ERROR]: Timeout while reading 2 values")
+            # raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 2 values")
 
         # Unpack 4 bytes as little-endian float
         a, b = struct.unpack('<ff', payload)
@@ -81,8 +85,9 @@ class EPMC:
         """
         payload = self.ser.read(16)
         if len(payload) != 16:
-            print("[EPMC SERIAL ERROR]: Timeout while reading 4 values")
-            raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 4 values")
+            return 0.0, 0.0, 0.0, 0.0
+            # print("[EPMC SERIAL ERROR]: Timeout while reading 4 values")
+            # raise EPMCSerialError("[EPMC SERIAL ERROR]: Timeout while reading 4 values")
 
         # Unpack 4 bytes as little-endian float
         a, b, c, d = struct.unpack('<ffff', payload)
@@ -90,29 +95,29 @@ class EPMC:
     
     #---------------------------------------------------------------------
 
-    def write_data1(self, cmd, pos, val):
+    def write_data1(self, cmd, val, pos=100):
         payload = struct.pack('<Bf', pos, val)
         self.send_packet_with_payload(cmd, payload)
         val = self.read_packet1()
         return val
 
-    def read_data1(self, cmd, pos):
+    def read_data1(self, cmd, pos=100):
         payload = struct.pack('<Bf', pos, 0.0)  # big-endian
         self.send_packet_with_payload(cmd, payload)
         val = self.read_packet1()
         return val
     
     def write_data2(self, cmd, a, b):
-        payload = struct.pack('<ff', a,b) 
+        payload = struct.pack('<ff', a, b) 
         self.send_packet_with_payload(cmd, payload)
 
     def read_data2(self, cmd):
-        self.send_packet_without_payload(cmd)
+        self.send_packet_without_payload(cmd, length=8)
         a, b = self.read_packet2()
         return a, b
 
     def read_data4(self, cmd):
-        self.send_packet_without_payload(cmd)
+        self.send_packet_without_payload(cmd, length=16)
         a, b, c, d = self.read_packet4()
         return a, b, c, d
     
@@ -135,25 +140,29 @@ class EPMC:
         vel0, vel1 = self.read_data2(READ_UVEL)
         return round(vel0, 4), round(vel1, 4)
     
+    def readTVel(self):
+        vel0, vel1 = self.read_data2(READ_TVEL)
+        return round(vel0, 4), round(vel1, 4)
+    
     def setCmdTimeout(self, timeout):
-        res = self.write_data1(SET_CMD_TIMEOUT, 100, timeout)
+        res = self.write_data1(SET_CMD_TIMEOUT, timeout)
         return int(res)
         
     def getCmdTimeout(self):
-        timeout = self.read_data1(GET_CMD_TIMEOUT, 100)
+        timeout = self.read_data1(GET_CMD_TIMEOUT)
         return int(timeout)
     
     def setPidMode(self, mode):
-        res = self.write_data1(SET_PID_MODE, 100, mode)
+        res = self.write_data1(SET_PID_MODE, mode)
         res = True if int(res) == 1 else False
         return res
     
     def getPidMode(self):
-        mode = self.read_data1(GET_CMD_TIMEOUT, 100)
+        mode = self.read_data1(GET_CMD_TIMEOUT)
         return int(mode)
     
     def clearDataBuffer(self):
-        res = self.write_data1(CLEAR_DATA_BUFFER, 100, 0.0)
+        res = self.write_data1(CLEAR_DATA_BUFFER, 0.0)
         res = True if int(res) == 1 else False
         return res
     
@@ -164,7 +173,7 @@ class EPMC:
         return round(pos0, 4), round(pos1, 4), round(vel0, 4), round(vel1, 4)
     
     #---------------------------------------------------------------------
-    
+
     def getMaxVel(self, motor_no):
         maxVel = self.read_data1(GET_MAX_VEL, motor_no)
         return round(maxVel, 3)
