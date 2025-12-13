@@ -140,10 +140,6 @@ class EPMC:
         vel0, vel1 = self.read_data2(READ_UVEL)
         return round(vel0, 4), round(vel1, 4)
     
-    def readTVel(self):
-        vel0, vel1 = self.read_data2(READ_TVEL)
-        return round(vel0, 4), round(vel1, 4)
-    
     def setCmdTimeout(self, timeout):
         res = self.write_data1(SET_CMD_TIMEOUT, timeout)
         return int(res)
