@@ -23,9 +23,12 @@ CLEAR_DATA_BUFFER = 0x2C
 
 
 class EPMC:
-    def __init__(self, port, baud=56700, timeOut=0.1):
+    def __init__(self):
+        pass
+
+    def connect(self, port, baud=56700, timeOut=0.1):
         self.ser = serial.Serial(port, baud, timeout=timeOut)
-    
+
     #------------------------------------------------------------------------
     def send_packet_without_payload(self, cmd, length=0):
         length = 0
