@@ -64,7 +64,7 @@ A simple way to get started is simply to try out and follow the example code
   > epmc.readPos() # returns tuple -> (success, angPos0, angPos1): bool, float, float
 
 - read motors angular velocity
-  > epmc.readVel() # returns tuple -> (success, angVel0, angVel1): bool, float, float
+  > epmc.readSpeed() # returns tuple -> (success, angVel0, angVel1): bool, float, float
 
 - read motorA maximum commandable angular velocity
   > epmc.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float, float
