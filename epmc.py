@@ -95,7 +95,7 @@ class EPMC:
         success, _, _ = self.recv(CLEAR)
         return success
     
-    def getMaxVel(self, motor_no):
+    def getMaxSpeed(self, motor_no):
         success, maxVel, _ = self.recv(GET_MAX_SPEED, motor_no)
         return success, round(maxVel, 3)
     #---------------------------------------------------------------------
