@@ -78,14 +78,14 @@ class EPMC:
         return success, round(pos0, 4), round(pos1, 4)
     
     def setCmdTimeout(self, timeout):
-        self.send(SET_CMD_TIMEOUT, float(timeout))
+        self.send(SET_CMD_TIMEOUT, 0.0, float(timeout))
         
     def getCmdTimeout(self):
         success, timeout, _ = self.recv(GET_CMD_TIMEOUT)
         return success, int(timeout)
     
     def setPidMode(self, mode):
-        self.send(SET_PID_MODE, mode)
+        self.send(SET_PID_MODE, 0.0, mode)
     
     def getPidMode(self):
         success, mode, _ = self.recv(GET_CMD_TIMEOUT)
