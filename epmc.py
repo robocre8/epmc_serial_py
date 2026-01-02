@@ -61,8 +61,11 @@ class EPMC:
             # self.ser.reset_input_buffer()
             # self.ser.reset_output_buffer()
             return False, 0.0, 0.0
-    
+        
     #---------------------------------------------------------------------
+    #         BASIC COMMANDS
+    #---------------------------------------------------------------------
+    
     def writeSpeed(self, v0, v1):
         self.send(WRITE_SPEED, v0, v1)
 
@@ -98,4 +101,67 @@ class EPMC:
     def getMaxSpeed(self, motor_no):
         success, maxVel, _ = self.recv(GET_MAX_SPEED, motor_no)
         return success, round(maxVel, 3)
+    
     #---------------------------------------------------------------------
+    #         ADVANCED COMMANDS (USE WITH CAUTION)
+    #---------------------------------------------------------------------
+    
+    def readTSpeed(self):
+        success, vel0, vel1 = self.recv(READ_TSPEED)
+        return success, vel0, vel1
+
+    def setPPR(self, motor_no, ppr):
+        self.send(SET_PPR, motor_no, ppr)
+    
+    def getPPR(self, motor_no):
+        success, ppr, _ = self.recv(GET_PPR, motor_no)
+        return success, round(ppr, 3)
+    
+    def setKp(self, motor_no, kp):
+        self.send(SET_KP, motor_no, kp)
+    
+    def getKp(self, motor_no):
+        success, kp, _ = self.recv(GET_KP, motor_no)
+        return success, round(kp, 3)
+    
+    def setKi(self, motor_no, ki):
+        self.send(SET_KI, motor_no, ki)
+    
+    def getKi(self, motor_no):
+        success, ki, _ = self.recv(GET_KI, motor_no)
+        return success, round(ki, 3)
+    
+    def setKd(self, motor_no, kd):
+        self.send(SET_KD, motor_no, kd)
+    
+    def getKd(self, motor_no):
+        success, kd, _ = self.recv(GET_KD, motor_no)
+        return success, round(kd, 3)
+    
+    def setRdir(self, motor_no, rdir):
+        self.send(SET_RDIR, motor_no, rdir)
+    
+    def getRdir(self, motor_no):
+        success, rdir, _ = self.recv(GET_RDIR, motor_no)
+        return success, int(rdir)
+    
+    def setCutOffFreq(self, motor_no, cutOffFreq):
+        self.send(SET_CF, motor_no, cutOffFreq)
+    
+    def getCutOffFreq(self, motor_no):
+        success, cutOffFreq, _ = self.recv(GET_CF, motor_no)
+        return success, round(cutOffFreq, 3)
+    
+    def setMaxSpeed(self, motor_no, maxVel):
+        self.send(SET_MAX_SPEED, motor_no, maxVel)
+    
+    def setI2cAddress(self, i2cAddress):
+        self.send(SET_I2C_ADDR, 0.0, i2cAddress)
+    
+    def getI2cAddress(self):
+        success, i2cAddress, _ = self.recv(GET_I2C_ADDR)
+        return success, int(i2cAddress)
+    
+    def resetAllParams(self):
+        success, _, _ = self.recv(RESET)
+        return success
