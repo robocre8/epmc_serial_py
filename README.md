@@ -1,6 +1,6 @@
 
 ## Easy PID Motor Controller (EPMC) Python Library
-This library helps communicate with the **`Easy PID Motor Controller Module`** in your PC or microcomputer-based python projects, with the [epmc_setup_application](https://github.com/samuko-things-company/epmc_setup_application).
+This library helps communicate with the **`Easy PID Motor Controller Module`** in your PC or microcomputer-based python projects, with the [epmc_setup_application](https://github.com/robocre8/epmc_setup_application).
 
 > you can use it in your microcomputer robotics project (e.g Raspberry Pi, PC, etc.)
 
@@ -26,7 +26,7 @@ A simple way to get started is simply to try out and follow the example code
 > [!NOTE]  
 > you can use this command if you want to clone the repo:
 > 
-> ```git clone https://github.com/samuko-things-company/epmc_python.git```
+> ```git clone https://github.com/robocre8/epmc_python.git```
 
 - check the serial port the driver is connected to:
   ```shell
