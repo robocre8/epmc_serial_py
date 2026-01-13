@@ -4,8 +4,8 @@ import time
 epmc = EPMC()
 
 # variable for communication
-pos0=0.0; pos1=0.0; pos2=0.0; pos3=0.0
-vel0=0.0; vel1=0.0; vel2=0.0; vel3=0.0
+pos0=0.0; pos1=0.0
+vel0=0.0; vel1=0.0
 
 # [4 rev/sec, 2 rev/sec, 1 rev/sec, 0.5 rev/sec]
 targetVel = [1.571, 3.142, 6.284, 12.568] 
@@ -26,7 +26,7 @@ serial_timeout = 0.016
 epmc.connect(serial_port, serial_baudrate, serial_timeout)
 
 #wait for the EPMC to fully setup
-for i in range(4):
+for i in range(5):
   time.sleep(1.0)
   print(f'waiting for epmc controller: {i+1} sec')
 
@@ -61,26 +61,23 @@ while True:
       v = 0.0
       epmc.writeSpeed(v, v)
       sendHigh = True
-    
-    
+        
     cmdTime = time.time()
 
-
-
   if time.time() - readTime > readTimeInterval:
-    try:
-      # epmc.writeSpeed(v, v)
-      success, val0, val1, val2, val3 = epmc.readMotorData()
-      if success: # only update if read was successfull
-        pos0 = val0
-        pos1 = val1
-        vel0 = val2
-        vel1 = val3
+    # epmc.writeSpeed(v, v)
+    success, val0, val1 = epmc.readPos()
+    if success: # only update if read was successfull
+      pos0 = val0
+      pos1 = val1
+    
+    success, val0, val1 = epmc.readSpeed()
+    if success: # only update if read was successfull
+      vel0 = val0
+      vel1 = val1
 
-      print(f"motor0_readings: [{pos0}, {vel0}]")
-      print(f"motor1_readings: [{pos1}, {vel1}]")
-      print("")
-    except:
-      pass
+    print(f"motor0_readings: [{pos0}, {vel0}]")
+    print(f"motor1_readings: [{pos1}, {vel1}]")
+    print("")
     
     readTime = time.time()
