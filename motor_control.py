@@ -21,7 +21,7 @@ cmdTimeInterval = 5.0
 # 50Hz comm setup
 serial_port = '/dev/ttyACM0'
 serial_baudrate = 115200
-serial_timeout = 0.016
+serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
 
 epmc.connect(serial_port, serial_baudrate, serial_timeout)
 
