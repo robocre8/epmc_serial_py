@@ -26,7 +26,7 @@ class EPMC:
     def __init__(self):
         pass
 
-    def connect(self, port, baud=56700, timeOut=0.1):
+    def connect(self, port, baud=115200, timeOut=0.1):
         self.ser = serial.Serial(port, baud, timeout=timeOut)
     
     def disconnect(self):
@@ -164,7 +164,7 @@ class EPMC:
         return success, int(mode)
     
     def clearDataBuffer(self):
-        success, res = self.read_data1(CLEAR_DATA_BUFFER)
+        success, _ = self.read_data1(CLEAR_DATA_BUFFER)
         return success
     
     #---------------------------------------------------------------------

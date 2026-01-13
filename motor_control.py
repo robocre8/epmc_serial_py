@@ -13,15 +13,17 @@ vel = targetVel[1]
 v = 0.0
 
 readTime = None
-readTimeInterval = 0.01 # 100Hz
+readTimeInterval = 0.02 # 50Hz
 
 cmdTime = None
 cmdTimeInterval = 5.0
 
-port = '/dev/ttyACM0'
-# port = '/dev/ttyUSB0'
+# 50Hz comm setup
+serial_port = '/dev/ttyACM0'
+serial_baudrate = 115200
+serial_timeout = 0.016
 
-epmc.connect(port)
+epmc.connect(serial_port, serial_baudrate, serial_timeout)
 
 #wait for the EPMC to fully setup
 for i in range(4):
