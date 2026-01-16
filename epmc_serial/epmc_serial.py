@@ -1,6 +1,11 @@
 import serial
 import struct
 
+# class EPMCSerialError(Exception):
+#     """Custom exception for for EPMC Comm failure"""
+#     pass
+
+
 # Serial Protocol Command IDs -------------
 START_BYTE = 0xAA
 WRITE_VEL = 0x01
@@ -8,6 +13,20 @@ WRITE_PWM = 0x02
 READ_POS = 0x03
 READ_VEL = 0x04
 READ_UVEL = 0x05
+READ_TVEL = 0x06
+SET_PPR = 0x07
+GET_PPR = 0x08
+SET_KP = 0x09
+GET_KP = 0x0A
+SET_KI = 0x0B
+GET_KI = 0x0C
+SET_KD = 0x0D
+GET_KD = 0x0E
+SET_RDIR = 0x0F
+GET_RDIR = 0x10
+SET_CUT_FREQ = 0x11
+GET_CUT_FREQ = 0x12
+SET_MAX_VEL = 0x13
 GET_MAX_VEL = 0x14
 SET_PID_MODE = 0x15
 GET_PID_MODE = 0x16
@@ -22,17 +41,17 @@ CLEAR_DATA_BUFFER = 0x2C
 
 
 
-class EPMC:
+class EPMCSerialClient:
     def __init__(self):
         pass
 
-    def connect(self, port, baud=115200, timeOut=0.1):
+    def connect(self, port, baud=115200, timeOut=0.01):
         self.ser = serial.Serial(port, baud, timeout=timeOut)
-    
+
     def disconnect(self):
         if self.ser.is_open:
             self.ser.close()
-
+    
     #------------------------------------------------------------------------
     def send_packet_without_payload(self, cmd):
         length = 0
@@ -149,6 +168,10 @@ class EPMC:
         success, vel0, vel1 = self.read_data2(READ_UVEL)
         return success, round(vel0, 4), round(vel1, 4)
     
+    def readTVel(self):
+        success, vel0, vel1 = self.read_data2(READ_TVEL)
+        return success, round(vel0, 4), round(vel1, 4)
+    
     def setCmdTimeout(self, timeout):
         self.write_data1(SET_CMD_TIMEOUT, timeout)
         
@@ -178,3 +201,63 @@ class EPMC:
     def getMaxVel(self, motor_no):
         success, maxVel = self.read_data1(GET_MAX_VEL, motor_no)
         return success, round(maxVel, 3)
+
+    def setPPR(self, motor_no, ppr):
+        self.write_data1(SET_PPR, ppr, motor_no)
+    
+    def getPPR(self, motor_no):
+        success, ppr = self.read_data1(GET_PPR, motor_no)
+        return success, round(ppr, 3)
+    
+    def setKp(self, motor_no, kp):
+        self.write_data1(SET_KP, kp, motor_no)
+    
+    def getKp(self, motor_no):
+        success, kp = self.read_data1(GET_KP, motor_no)
+        return success, round(kp, 3)
+    
+    def setKi(self, motor_no, ki):
+        self.write_data1(SET_KI, ki, motor_no)
+    
+    def getKi(self, motor_no):
+        success, ki = self.read_data1(GET_KI, motor_no)
+        return success, round(ki, 3)
+    
+    def setKd(self, motor_no, kd):
+        self.write_data1(SET_KD, kd, motor_no)
+    
+    def getKd(self, motor_no):
+        success, kd = self.read_data1(GET_KD, motor_no)
+        return success, round(kd, 3)
+    
+    def setRdir(self, motor_no, rdir):
+        self.write_data1(SET_RDIR, rdir, motor_no)
+    
+    def getRdir(self, motor_no):
+        success, rdir = self.read_data1(GET_RDIR, motor_no)
+        return success, int(rdir)
+    
+    def setCutOffFreq(self, motor_no, cutOffFreq):
+        self.write_data1(SET_CUT_FREQ, cutOffFreq, motor_no)
+    
+    def getCutOffFreq(self, motor_no):
+        success, cutOffFreq = self.read_data1(GET_CUT_FREQ, motor_no)
+        return success, round(cutOffFreq, 3)
+    
+    def setMaxVel(self, motor_no, maxVel):
+        self.write_data1(SET_MAX_VEL, maxVel, motor_no)
+    
+    def getMaxVel(self, motor_no):
+        success, maxVel = self.read_data1(GET_MAX_VEL, motor_no)
+        return success, round(maxVel, 3)
+    
+    def setI2cAddress(self, i2cAddress):
+        self.write_data1(SET_I2C_ADDR, i2cAddress)
+    
+    def getI2cAddress(self):
+        success, i2cAddress = self.read_data1(GET_I2C_ADDR)
+        return success, int(i2cAddress)
+    
+    def resetAllParams(self):
+        success, _ = self.read_data1(RESET_PARAMS)
+        return success
