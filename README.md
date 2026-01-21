@@ -36,36 +36,36 @@ A simple way to get started is simply to try out and follow the example code
 
 - A simple way to get started is simply to try out and follow the example `motor_control.py` code.
 
-- You can copy the **`epmc.py`** file into your python robotics project, import the library as shown in the example `motor_control.py` code, add it to your code, and start using it.
+- You can copy the **`controller.py`** file into your python robotics project, import the library as shown in the example `motor_control.py` code, add it to your code, and start using it.
 
 
 ## Basic Library functions and usage
 
 - connect to smc_driver shield module
-  > epmc = EPMC()
+  > controller = EPMCSerialClient()
   >
-  > epmc.connect("port_name or port_path")
+  > controller.connect("port_name or port_path")
   >
-  > epmc.clearDataBuffer() # returns bool -> success
+  > controller.clearDataBuffer() # returns bool -> success
 
 - send target angular velocity command
-  > epmc.writeSpeed(motor0_TargetVel, motor1_TargetVel)
+  > controller.writeSpeed(motor0_TargetVel, motor1_TargetVel)
 
 - send PWM command
-  > epmc.writePWM(motor0_PWM, motor1_PWM)
+  > controller.writePWM(motor0_PWM, motor1_PWM)
 
 - set motor command timeout
-  > epmc.setCmdTimeout(timeout_ms)
+  > controller.setCmdTimeout(timeout_ms)
 
 - get motor command timeout
-  > epmc.getCmdTimeout() # returns tuple -> (success, motor_command_timeout_ms): bool, float
+  > controller.getCmdTimeout() # returns tuple -> (success, motor_command_timeout_ms): bool, float
 
 - read motors angular position
-  > epmc.readPos() # returns tuple -> (success, angPos0, angPos1): bool, float, float
+  > controller.readPos() # returns tuple -> (success, angPos0, angPos1): bool, float, float
 
 - read motors angular velocity
-  > epmc.readVel() # returns tuple -> (success, angVel0, angVel1): bool, float, float
+  > controller.readVel() # returns tuple -> (success, angVel0, angVel1): bool, float, float
 
 - read motorA maximum commandable angular velocity
-  > epmc.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float, float
+  > controller.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float, float
   > maxVel0 or maxVel1 based on the specified motor number

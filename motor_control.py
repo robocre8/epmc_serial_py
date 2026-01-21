@@ -1,7 +1,7 @@
-from epmc import EPMC
+from epmc_serial import EPMCSerialClient
 import time
 
-epmc = EPMC()
+controller = EPMCSerialClient()
 
 # variable for communication
 pos0=0.0; pos1=0.0; pos2=0.0; pos3=0.0
@@ -23,20 +23,20 @@ serial_port = '/dev/ttyACM0'
 serial_baudrate = 115200
 serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
 
-epmc.connect(serial_port, serial_baudrate, serial_timeout)
+controller.connect(serial_port, serial_baudrate, serial_timeout)
 
 #wait for the EPMC to fully setup
 for i in range(4):
   time.sleep(1.0)
   print(f'waiting for epmc controller: {i+1} sec')
 
-success = epmc.clearDataBuffer()
-epmc.writeSpeed(v, v)
+success = controller.clearDataBuffer()
+controller.writeSpeed(v, v)
 print('configuration complete')
 
 timeout_ms = 10000
-epmc.setCmdTimeout(timeout_ms)
-success, val0 = epmc.getCmdTimeout()
+controller.setCmdTimeout(timeout_ms)
+success, val0 = controller.getCmdTimeout()
 if success: # only update if read was successfull
   timeout_ms = val0
   print("command timeout in ms: ", timeout_ms)
@@ -53,13 +53,13 @@ while True:
     if sendHigh:
       # print("command high")
       v = vel
-      epmc.writeSpeed(v, v)
+      controller.writeSpeed(v, v)
       vel = vel*-1
       sendHigh = False
     else:
       # print("command low")
       v = 0.0
-      epmc.writeSpeed(v, v)
+      controller.writeSpeed(v, v)
       sendHigh = True
     
     
@@ -69,8 +69,8 @@ while True:
 
   if time.time() - readTime > readTimeInterval:
     try:
-      # epmc.writeSpeed(v, v)
-      success, val0, val1, val2, val3 = epmc.readMotorData()
+      # controller.writeSpeed(v, v)
+      success, val0, val1, val2, val3 = controller.readMotorData()
       if success: # only update if read was successfull
         pos0 = val0
         pos1 = val1
