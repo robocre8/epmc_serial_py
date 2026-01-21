@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "epmc-serial"
-version = "1.0.0"
+version = "1.1.0"
 description = "Python serial interface for the Easy PID Motor Controller (EPMC)"
 authors = [
-  { name="Example Author", email="author@example.com" },
+  { name="Samuel Obiagba", email="samuel.c.agba@gmail.com" },
 ]
 dependencies = ["pyserial"]
 readme = "README.md"
