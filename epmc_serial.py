@@ -57,7 +57,7 @@ class EPMCSerialClient:
             return
         try:
             self.ser.reset_input_buffer()
-        except Exception:
+        except serial.SerialException:
             pass
 
 
@@ -67,8 +67,9 @@ class EPMCSerialClient:
             return
         try:
             self.ser.reset_output_buffer()
-        except Exception:
+        except serial.SerialException:
             pass
+
 
     def _send_packet(self, cmd: int, payload: bytes = b""):
         if self.ser is None:
@@ -81,13 +82,26 @@ class EPMCSerialClient:
         self.ser.write(packet)
         self.ser.flush()
 
+    
     def _read_floats(self, count: int) -> Tuple[bool, tuple]:
         if self.ser is None:
             raise RuntimeError("Serial port is not connected")
-        payload = self.ser.read(4 * count)
-        if len(payload) != 4 * count:
+
+        try:
+            payload = self.ser.read(4 * count)
+
+            if len(payload) != 4 * count:
+                # partial frame → stream is now misaligned
+                self._flush_rx()
+                return False, tuple([0.0] * count)
+
+        except (serial.SerialTimeoutException,
+                serial.SerialException,
+                Exception):
+            # Any read-related failure → resync stream
             self._flush_rx()
             return False, tuple([0.0] * count)
+        
         return True, struct.unpack("<" + "f" * count, payload)
 
     # ------------------ Generic Data ------------------
