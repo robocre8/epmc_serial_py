@@ -1,7 +1,7 @@
-from epmc_serial import EPMCSerialClient
+from epmc_serial import EPMCSerialClient, SupportedNumOfMotors
 import time
 
-controller = EPMCSerialClient()
+controller = EPMCSerialClient(SupportedNumOfMotors.FOUR)
 
 # variable for communication
 pos0=0.0; pos1=0.0; pos2=0.0; pos3=0.0
@@ -19,19 +19,14 @@ cmdTime = None
 cmdTimeInterval = 5.0
 
 # 50Hz comm setup
-serial_port = '/dev/ttyACM0'
+serial_port = '/dev/ttyUSB0'
 serial_baudrate = 115200
 serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
 
 controller.connect(serial_port, serial_baudrate, serial_timeout)
 
-#wait for the EPMC to fully setup
-for i in range(4):
-  time.sleep(1.0)
-  print(f'waiting for epmc controller: {i+1} sec')
-
 success = controller.clearDataBuffer()
-controller.writeSpeed(v, v)
+controller.writeSpeed(0.0, 0.0, 0.0, 0.0)
 print('configuration complete')
 
 timeout_ms = 10000
@@ -53,13 +48,13 @@ while True:
     if sendHigh:
       # print("command high")
       v = vel
-      controller.writeSpeed(v, v)
+      controller.writeSpeed(v, v, v, v)
       vel = vel*-1
       sendHigh = False
     else:
       # print("command low")
       v = 0.0
-      controller.writeSpeed(v, v)
+      controller.writeSpeed(v, v, v, v)
       sendHigh = True
     
     
@@ -69,16 +64,16 @@ while True:
 
   if time.time() - readTime > readTimeInterval:
     try:
-      # controller.writeSpeed(v, v)
-      success, val0, val1, val2, val3 = controller.readMotorData()
+      # controller.writeSpeed(v, v, v, v)
+      success, val = controller.readMotorData()
       if success: # only update if read was successfull
-        pos0 = val0
-        pos1 = val1
-        vel0 = val2
-        vel1 = val3
+        pos0 = val[0]; pos1 = val[1]; pos2 = val[2]; pos3 = val[3]
+        vel0 = val[4]; vel1 = val[5]; vel2 = val[6]; vel3 = val[7]
 
       print(f"motor0_readings: [{pos0}, {vel0}]")
       print(f"motor1_readings: [{pos1}, {vel1}]")
+      print(f"motor2_readings: [{pos2}, {vel2}]")
+      print(f"motor3_readings: [{pos3}, {vel3}]")
       print("")
     except:
       pass
