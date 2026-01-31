@@ -39,13 +39,14 @@ A simple way to get started is simply to try out and follow the example code
 - You can copy the **`controller.py`** file into your python robotics project, import the library as shown in the example `motor_control.py` code, add it to your code, and start using it.
 
 
-## Basic Library functions and usage
+## Basic Library functions and usage (Two Motor Support Control)
 
-- connect to smc_driver shield module
-  > controller = EPMCSerialClient()
+- connect to EPMC module
+  > controller = EPMCSerialClient(SupportedNumOfMotors.TWO)
   >
   > controller.connect("port_name or port_path")
-  >
+
+- clear speed, position, e.t.c data buffer on the EPMC module
   > controller.clearDataBuffer() # returns bool -> success
 
 - send target angular velocity command
@@ -60,12 +61,56 @@ A simple way to get started is simply to try out and follow the example code
 - get motor command timeout
   > controller.getCmdTimeout() # returns tuple -> (success, motor_command_timeout_ms): bool, float
 
+- read motors angular position and angular velocity
+  > controller.readMotorData() # returns bool, tuple(size=4foats) -> success, (pos0, pos1, vel0, vel1)
+
 - read motors angular position
-  > controller.readPos() # returns tuple -> (success, angPos0, angPos1): bool, float, float
+  > controller.readPos() # returns bool, tuple(size=2floats) -> success, (pos0, pos1)
 
 - read motors angular velocity
-  > controller.readVel() # returns tuple -> (success, angVel0, angVel1): bool, float, float
+  > controller.readVel() # returns bool, tuple(size=2floats) -> success, (vel0, vel1)
 
-- read motorA maximum commandable angular velocity
-  > controller.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float, float
+- read motor maximum commandable angular velocity
+  > controller.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float
   > maxVel0 or maxVel1 based on the specified motor number
+
+- while these function above help communicate with the already configure EPMC module, more examples of advanced funtions usage for parameter tuning can be found in the [epmc_setup_application](https://github.com/robocre8/epmc_setup_application) source code
+
+#
+
+## Basic Library functions and usage (Four Motor Support Control)
+
+- connect to EPMC module
+  > controller = EPMCSerialClient(SupportedNumOfMotors.FOUR)
+  >
+  > controller.connect("port_name or port_path")
+
+- clear speed, position, e.t.c data buffer on the EPMC module
+  > controller.clearDataBuffer() # returns bool -> success
+
+- send target angular velocity command
+  > controller.writeSpeed(motor0_TargetVel, motor1_TargetVel)
+
+- send PWM command
+  > controller.writePWM(motor0_PWM, motor1_PWM)
+
+- set motor command timeout
+  > controller.setCmdTimeout(timeout_ms)
+
+- get motor command timeout
+  > controller.getCmdTimeout() # returns tuple -> (success, motor_command_timeout_ms): bool, float
+
+- read motors angular position and angular velocity
+  > controller.readMotorData() # returns bool, tuple(size=8floats) -> success, (pos0, pos1, pos2, pos3, vel0, vel1, vel2, vel3)
+
+- read motors angular position
+  > controller.readPos() # returns bool, tuple(size=4floats) -> success, (pos0, pos1, pos2, pos3)
+
+- read motors angular velocity
+  > controller.readVel() # returns bool, tuple(size=4floats) -> success, (vel0, vel1, vel2, vel3)
+
+- read motor maximum commandable angular velocity
+  > controller.getMaxVel(motor_no) # returns tuple -> (success, max_vel): bool, float
+  > maxVel0 or maxVel1 based on the specified motor number
+
+- while these function above help communicate with the already configure EPMC module, more examples of advanced funtions usage for parameter tuning can be found in the [epmc_setup_application](https://github.com/robocre8/epmc_setup_application) source code
