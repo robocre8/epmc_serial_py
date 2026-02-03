@@ -10,6 +10,9 @@ Python serial interface for the Easy PID Motor Controller (EPMC). The Library Su
 - you'll need to pip install the pyserial library
   ```shell
     pip3 install epmc-serial   //linux or mac
+  ```
+  OR
+  ```shell
     pip install epmc-serial  //windows
   ```
 
@@ -19,6 +22,8 @@ Python serial interface for the Easy PID Motor Controller (EPMC). The Library Su
 - you'll need to pip install the pyserial library
   ```shell
     pip3 uninstall epmc-serial   //linux or mac
+  ```
+  ```shell
     pip uninstall epmc-serial  //windows
   ```
 
