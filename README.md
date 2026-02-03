@@ -89,7 +89,11 @@ A simple way to get started is simply to try out and follow the example code
 ## Basic Library functions and usage (Four Motor Support Control)
 
 - connect to EPMC module
-  > controller = EPMCSerialClient(SupportedNumOfMotors.FOUR)
+  > controller = EPMCSerialClient()
+  >
+  > _#ensure you set/call **supportedNumOfMotors()** before **connect()** as below:_
+  >
+  > controller .supportedNumOfMotors(SupportedNumOfMotors.FOUR)
   >
   > controller.connect("port_name or port_path")
 
