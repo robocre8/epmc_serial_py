@@ -30,19 +30,27 @@ A simple way to get started is simply to try out and follow the example code
 
 - check the serial port the driver is connected to:
   ```shell
-  ls /dev/ttyA*
+  ls /dev/ttyA* # for two motor support
   ```
-  > you should see /dev/ttyACM0 or /dev/ttyACM1 and so on
+  OR
+  ```shell
+  ls /dev/ttyU* # for four motor support
+  ```
+  > you should see /dev/ttyACM0 or /dev/ttyUSB0 or ... and so on
 
-- A simple way to get started is simply to try out and follow the example `motor_control.py` code.
+- A simple way to get started is simply to try out and follow the example code.
 
-- You can copy the **`controller.py`** file into your python robotics project, import the library as shown in the example `motor_control.py` code, add it to your code, and start using it.
+- You can add it to your code, and start using it.
 
 
 ## Basic Library functions and usage (Two Motor Support Control)
 
 - connect to EPMC module
-  > controller = EPMCSerialClient(SupportedNumOfMotors.TWO)
+  > controller = EPMCSerialClient()
+  >
+  > _#ensure you set/call **supportedNumOfMotors()** before **connect()** as below:_
+  >
+  > controller .supportedNumOfMotors(SupportedNumOfMotors.TWO)
   >
   > controller.connect("port_name or port_path")
 

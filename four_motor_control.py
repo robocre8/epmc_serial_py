@@ -1,7 +1,7 @@
 from epmc_serial import EPMCSerialClient, SupportedNumOfMotors
 import time
 
-controller = EPMCSerialClient(SupportedNumOfMotors.FOUR)
+controller = EPMCSerialClient()
 
 # variable for communication
 pos0=0.0; pos1=0.0; pos2=0.0; pos3=0.0
@@ -23,6 +23,7 @@ serial_port = '/dev/ttyUSB0'
 serial_baudrate = 115200
 serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
 
+controller.supportedNumOfMotors(SupportedNumOfMotors.FOUR)
 controller.connect(serial_port, serial_baudrate, serial_timeout)
 
 success = controller.clearDataBuffer()
