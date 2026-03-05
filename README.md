@@ -43,12 +43,10 @@ A simple way to get started is simply to try out and follow the example code
 - You can add it to your code, and start using it.
 
 
-## Basic Library functions and usage (Two Motor Support Control)
+## Basic Library functions and usage (Motor Control - Default)
 
 - connect to EPMC module
   > controller = EPMCSerialClient()
-  >
-  > _#ensure you set/call **supportedNumOfMotors()** before **connect()** as below:_
   >
   > controller .supportedNumOfMotors(SupportedNumOfMotors.TWO)
   >
@@ -86,7 +84,7 @@ A simple way to get started is simply to try out and follow the example code
 
 #
 
-## Basic Library functions and usage (Four Motor Support Control)
+## Basic Library functions and usage (Four Motor Support)
 
 - connect to EPMC module
   > controller = EPMCSerialClient()
