@@ -49,12 +49,10 @@ Python serial interface for the Easy PID Motor Controller (EPMC). The Library Su
 - A simple way to get started is simply to try out the example code below
 
 
-## Basic Library functions and usage (Two Motor Support Control)
+## Basic Library functions and usage (Motor Control - Default)
 
 - connect to EPMC module
   > controller = EPMCSerialClient()
-  >
-  > _#ensure you set/call **supportedNumOfMotors()** before **connect()** as below:_
   >
   > controller .supportedNumOfMotors(SupportedNumOfMotors.TWO)
   >
@@ -92,9 +90,9 @@ Python serial interface for the Easy PID Motor Controller (EPMC). The Library Su
 
 #
 
-## example code (Two Motor Support Control)
+## example code (Motor Control - Default)
 ```python
-from epmc_serial import EPMCSerialClient, SupportedNumOfMotors
+from epmc_serial import EPMCSerialClient
 import time
 
 controller = EPMCSerialClient()
@@ -114,12 +112,10 @@ readTimeInterval = 0.02 # 50Hz
 cmdTime = None
 cmdTimeInterval = 5.0
 
-# 50Hz comm setup
+# EPMC Connect
 serial_port = '/dev/ttyACM0'
 serial_baudrate = 115200
 serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
-
-controller .supportedNumOfMotors(SupportedNumOfMotors.TWO)
 controller.connect(serial_port, serial_baudrate, serial_timeout)
 
 success = controller.clearDataBuffer()
@@ -178,7 +174,7 @@ while True:
 
 #
 
-## Basic Library functions and usage (Four Motor Support Control)
+## Basic Library functions and usage (Four Motor Support)
 
 - connect to EPMC module
   > controller = EPMCSerialClient()
@@ -221,7 +217,7 @@ while True:
 
 #
 
-## example code (Four Motor Support Control)
+## example code (Four Motor Support)
 ```python
 from epmc_serial import EPMCSerialClient, SupportedNumOfMotors
 import time
@@ -243,11 +239,10 @@ readTimeInterval = 0.02 # 50Hz
 cmdTime = None
 cmdTimeInterval = 5.0
 
-# 50Hz comm setup
+# EPMC Connect
 serial_port = '/dev/ttyUSB0'
 serial_baudrate = 115200
 serial_timeout = 0.018 #value < 0.02 (for 50Hz comm)
-
 controller.supportedNumOfMotors(SupportedNumOfMotors.FOUR)
 controller.connect(serial_port, serial_baudrate, serial_timeout)
 
